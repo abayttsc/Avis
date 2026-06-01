@@ -26,8 +26,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     { to: '/settings', icon: SettingsIcon, label: 'Settings' },
   ];
 
+  const isDarkMode = true; // For now, defaulting to dark to match photos
+
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 watermark-pattern">
+    <div className={cn(
+      "flex h-screen overflow-hidden transition-colors duration-500 watermark-pattern",
+      isDarkMode ? "bg-[#050b18]" : "bg-gray-50"
+    )}>
       {/* Sidebar */}
       <aside className="w-64 bg-[#020617] text-white flex flex-col z-20 shadow-2xl">
         <SidebarLogo />
@@ -60,27 +65,44 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden relative">
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10 shadow-sm no-print">
+        <header className={cn(
+          "h-16 border-b flex items-center justify-between px-8 z-10 shadow-sm no-print transition-colors duration-500",
+          isDarkMode ? "bg-[#050b18] border-white/5" : "bg-white border-slate-200"
+        )}>
           <div className="flex items-center gap-2">
-            <span className="text-slate-400 font-mono text-xs uppercase tracking-[0.2em]">Section /</span>
-            <h2 className="text-slate-900 font-bold uppercase tracking-wide">
+            <span className="text-slate-500 font-mono text-xs uppercase tracking-[0.2em]">Section /</span>
+            <h2 className={cn(
+              "font-bold uppercase tracking-wide",
+              isDarkMode ? "text-white" : "text-slate-900"
+            )}>
               {settings.stationName || 'Management Core'}
             </h2>
           </div>
           <div className="flex items-center gap-4">
-             <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100">
+             <div className={cn(
+               "flex items-center gap-2 px-3 py-1 rounded-full border transition-colors",
+               isDarkMode
+                 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                 : "bg-emerald-50 text-emerald-600 border-emerald-100"
+             )}>
                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                 <span className="text-[10px] font-bold uppercase tracking-tighter">System Online</span>
              </div>
-             <div className="w-8 h-8 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center">
-                <span className="text-xs font-bold text-slate-600">JD</span>
+             <div className={cn(
+               "w-8 h-8 rounded-full border flex items-center justify-center",
+               isDarkMode ? "bg-white/5 border-white/10" : "bg-slate-200 border-slate-300"
+             )}>
+                <span className={cn("text-xs font-bold", isDarkMode ? "text-slate-300" : "text-slate-600")}>JD</span>
              </div>
           </div>
         </header>
 
-        <section className="flex-1 overflow-y-auto p-8 relative">
+        <section className="flex-1 overflow-y-auto p-8 relative custom-scrollbar">
           {/* Subtle Silver Watermark Background (Pattern is in index.css) */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none watermark-pattern"></div>
+          <div className={cn(
+            "absolute inset-0 pointer-events-none watermark-pattern transition-opacity duration-500",
+            isDarkMode ? "opacity-[0.02]" : "opacity-[0.04]"
+          )}></div>
           <div className="relative z-10 max-w-7xl mx-auto">
             {children}
           </div>

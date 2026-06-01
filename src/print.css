@@ -1,0 +1,87 @@
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 10pt;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Hide UI elements */
+  aside,
+  header,
+  .no-print,
+  nav,
+  button,
+  .pagination-controls {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    width: 100% !important;
+  }
+
+  section {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .glass-card {
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    background: white !important;
+  }
+
+  table {
+    width: 100% !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  thead tr {
+    background-color: #0f172a !important;
+    color: white !important;
+  }
+
+  /* Signature Lines */
+  .print-footer {
+    display: block !important;
+    margin-top: 50px;
+  }
+
+  .signature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 30px;
+  }
+
+  .signature-line {
+    border-top: 1px solid black;
+    padding-top: 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 8pt;
+    text-transform: uppercase;
+  }
+
+  .print-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 10px;
+  }
+}
+
+/* Screen only header/footer */
+.print-footer, .print-header {
+  display: none;
+}

@@ -4,7 +4,7 @@ import SystemIntelligence from './components/SystemIntelligence';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Registration from './pages/Registration';
-import Registry from './pages/Registry';
+import Reporting from './pages/Reporting';
 import Settings from './pages/Settings';
 
 const App: React.FC = () => {
@@ -21,7 +21,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/registration" element={<Registration />} />
-          <Route path="/registry" element={<Registry />} />
+          <Route path="/reporting" element={<Reporting />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </Layout>

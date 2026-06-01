@@ -1,5 +1,8 @@
 import React from 'react';
 import { useVehicles } from '../hooks/useVehicles';
+import { usePersistence } from '../hooks/usePersistence';
+import { sendSMSTrigger } from '../lib/smsService';
+import type { AppSettings } from '../types';
 import {
   Users,
   ClipboardCheck,
@@ -31,6 +34,7 @@ const data = [
 
 const Dashboard: React.FC = () => {
   const { vehicles } = useVehicles();
+  const [settings] = usePersistence<AppSettings>('avis_settings', {} as AppSettings);
 
   const todayCount = vehicles.filter(v => v.registrationDate === new Date().toISOString().split('T')[0]).length;
   const criticalCount = vehicles.filter(v => v.status === 'Critical').length;
@@ -161,7 +165,14 @@ const Dashboard: React.FC = () => {
                     <p className="text-[10px] font-mono text-slate-500 uppercase tracking-tighter">{item.plate}</p>
                   </div>
                 </div>
-                <button className="p-2 bg-white text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg border border-slate-200 shadow-sm transition-all group-hover:scale-110" title="Send Reminder">
+                <button
+                  onClick={() => {
+                    const v = vehicles.find(veh => veh.plateNumber === item.plate);
+                    if (v) sendSMSTrigger(v, settings);
+                  }}
+                  className="p-2 bg-white text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg border border-slate-200 shadow-sm transition-all group-hover:scale-110"
+                  title="Send Reminder"
+                >
                   <Zap className="w-4 h-4 fill-current" />
                 </button>
               </div>

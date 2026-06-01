@@ -11,6 +11,9 @@ export interface Vehicle {
   seatingCapacity: number;
   registrationDate: string;
   expiryDate: string;
+  certificateNumber: string;
+  fileLocation: string;
+  visualResult: 'Pass' | 'Fail';
   notes: string;
   status: VehicleStatus;
   lastUpdated: number;
@@ -26,6 +29,7 @@ export interface AppSettings {
   smtpUser: string;
   smtpPass: string;
   gatewayEnabled: boolean;
+  smsTemplate: string;
 }
 
 export interface SyncState {

@@ -8,6 +8,8 @@ import {
   LogOut
 } from 'lucide-react';
 import SidebarLogo from './SidebarLogo';
+import { usePersistence } from '../hooks/usePersistence';
+import type { AppSettings } from '../types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -16,10 +18,11 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [settings] = usePersistence<AppSettings>('avis_settings', {} as AppSettings);
   const navItems = [
     { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/registration', icon: UserPlus, label: 'Registration' },
-    { to: '/registry', icon: ClipboardList, label: 'Registry' },
+    { to: '/reporting', icon: ClipboardList, label: 'Reporting' },
     { to: '/settings', icon: SettingsIcon, label: 'Settings' },
   ];
 
@@ -57,12 +60,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden relative">
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10 shadow-sm">
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10 shadow-sm no-print">
           <div className="flex items-center gap-2">
             <span className="text-slate-400 font-mono text-xs uppercase tracking-[0.2em]">Section /</span>
             <h2 className="text-slate-900 font-bold uppercase tracking-wide">
-              {/* Dynamic title based on route could go here */}
-              Management Core
+              {settings.stationName || 'Management Core'}
             </h2>
           </div>
           <div className="flex items-center gap-4">

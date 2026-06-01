@@ -8,7 +8,8 @@ import {
   FileText,
   Save,
   RotateCcw,
-  AlertCircle
+  AlertCircle,
+  Building2
 } from 'lucide-react';
 import { addDays, format } from 'date-fns';
 import { useVehicles } from '../hooks/useVehicles';
@@ -23,6 +24,9 @@ interface RegistrationForm {
   vehicleType: string;
   seatingCapacity: string;
   registrationDate: string;
+  certificateNumber: string;
+  fileLocation: string;
+  visualResult: 'Pass' | 'Fail';
   notes: string;
 }
 
@@ -40,6 +44,9 @@ const Registration: React.FC = () => {
     vehicleType: 'Private',
     seatingCapacity: '4',
     registrationDate: format(new Date(), 'yyyy-MM-dd'),
+    certificateNumber: '',
+    fileLocation: '',
+    visualResult: 'Pass',
     notes: '',
   });
 
@@ -81,11 +88,14 @@ const Registration: React.FC = () => {
         seatingCapacity: parseInt(formData.seatingCapacity),
         registrationDate: formData.registrationDate,
         expiryDate: calculateExpiry(formData.registrationDate),
+        certificateNumber: formData.certificateNumber,
+        fileLocation: formData.fileLocation,
+        visualResult: formData.visualResult,
         notes: formData.notes,
-        status: 'Valid',
+        status: formData.visualResult === 'Fail' ? 'Suspended' : 'Valid',
         lastUpdated: Date.now()
       });
-      navigate('/registry');
+      navigate('/reporting');
     } catch (error) {
       console.error(error);
     } finally {
@@ -229,6 +239,71 @@ const Registration: React.FC = () => {
                 value={formData.registrationDate}
                 onChange={handleChange}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-blue-500/20 focus:border-blue-500 transition-all font-bold"
+              />
+            </div>
+
+             {/* Technical Assessment */}
+             <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                <FileText className="w-3 h-3" /> Certificate Number
+              </label>
+              <input
+                type="text"
+                name="certificateNumber"
+                value={formData.certificateNumber}
+                onChange={handleChange}
+                placeholder="Cert # (e.g. TEC-1234)"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-blue-500/20 focus:border-blue-500 transition-all font-mono"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                <Building2 className="w-3 h-3" /> File Location
+              </label>
+              <input
+                type="text"
+                name="fileLocation"
+                value={formData.fileLocation}
+                onChange={handleChange}
+                placeholder="e.g. Cabinet A, Shelf 3"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                <AlertCircle className="w-3 h-3" /> Visual Result
+              </label>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, visualResult: 'Pass' }))}
+                  className={`flex-1 py-3 rounded-xl font-bold transition-all ${formData.visualResult === 'Pass' ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'}`}
+                >
+                  PASS
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, visualResult: 'Fail' }))}
+                  className={`flex-1 py-3 rounded-xl font-bold transition-all ${formData.visualResult === 'Fail' ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-400'}`}
+                >
+                  FAIL
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                <FileText className="w-3 h-3" /> Phone Number
+              </label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="09..."
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-blue-500/20 focus:border-blue-500 transition-all font-mono"
               />
             </div>
 

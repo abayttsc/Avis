@@ -21,6 +21,7 @@ const defaultSettings: AppSettings = {
   smtpUser: '',
   smtpPass: '',
   gatewayEnabled: true,
+  smsTemplate: 'Dear [NAME], your vehicle [PLATE] inspection is due on [DATE]. Please visit Abay Technical Station. Ref: [CERT]',
 };
 
 const Settings: React.FC = () => {
@@ -130,6 +131,33 @@ const Settings: React.FC = () => {
                     <option value="light">Production Light</option>
                     <option value="dark">Deep Space Dark</option>
                   </select>
+               </div>
+            </div>
+          </div>
+
+          {/* SMTP Gateway Section */}
+          {/* SMS Template Section */}
+          <div className="glass-card rounded-2xl overflow-hidden border-slate-200/60 shadow-sm">
+            <div className="bg-blue-600 px-6 py-4">
+               <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                 <Mail className="w-4 h-4" /> Automated SMS Template
+               </h3>
+            </div>
+            <div className="p-6 space-y-4">
+               <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Global Message Template</label>
+                  <textarea
+                    name="smsTemplate"
+                    value={settings.smsTemplate}
+                    onChange={handleChange as any}
+                    rows={3}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-blue-500/20 focus:border-blue-500 transition-all font-medium resize-none"
+                  />
+                  <div className="flex gap-2">
+                     {['[NAME]', '[PLATE]', '[DATE]', '[CERT]'].map(tag => (
+                        <span key={tag} className="px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-mono font-bold">{tag}</span>
+                     ))}
+                  </div>
                </div>
             </div>
           </div>

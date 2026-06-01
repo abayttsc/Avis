@@ -1,6 +1,28 @@
 import { useState, useCallback } from 'react';
 
 /**
+ * Deep merge two objects.
+ */
+function deepMerge(target: any, source: any): any {
+  if (!source || typeof source !== 'object') return source;
+  if (!target || typeof target !== 'object') return source;
+
+  const output = { ...target };
+  Object.keys(source).forEach(key => {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      if (!(key in target)) {
+        output[key] = source[key];
+      } else {
+        output[key] = deepMerge(target[key], source[key]);
+      }
+    } else {
+      output[key] = source[key];
+    }
+  });
+  return output;
+}
+
+/**
  * Robust persistence hook utilizing localStorage with deep-merging to protect schema updates.
  */
 export function usePersistence<T>(key: string, initialValue: T) {
@@ -15,7 +37,9 @@ export function usePersistence<T>(key: string, initialValue: T) {
       if (item) {
         const parsed = JSON.parse(item);
         // Deep merge initialValue with parsed to ensure new keys in schema are present
-        return { ...initialValue, ...parsed };
+        // We merge initialValue (schema) INTO parsed (data) but actually we want to ensure
+        // all keys from initialValue exist.
+        return deepMerge(initialValue, parsed);
       }
       return initialValue;
     } catch (error) {

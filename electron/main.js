@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { spawn } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -24,6 +25,38 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle('send-sms', async (event, data) => {
+    return new Promise((resolve, reject) => {
+      const scriptPath = path.join(__dirname, '../python_bridge/sms_bridge.py');
+      const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
+      const pythonProcess = spawn(pythonCmd, [scriptPath]);
+
+      pythonProcess.stdin.write(JSON.stringify(data));
+      pythonProcess.stdin.end();
+
+      let output = '';
+      pythonProcess.stdout.on('data', (data) => {
+        output += data.toString();
+      });
+
+      pythonProcess.stderr.on('data', (data) => {
+        console.error(`SMS Bridge Error: ${data}`);
+      });
+
+      pythonProcess.on('close', (code) => {
+        if (code === 0) {
+          try {
+            resolve(JSON.parse(output));
+          } catch (e) {
+            resolve({ success: true, message: 'SMS logic executed' });
+          }
+        } else {
+          reject(new Error(`Process exited with code ${code}`));
+        }
+      });
+    });
+  });
+
   createWindow();
 
   app.on('activate', () => {

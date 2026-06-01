@@ -36,9 +36,12 @@ export const sendSMSTrigger = async (vehicle: Vehicle, settings: AppSettings) =>
 
   console.log("AVIS SMS Trigger Payload:", payload);
 
-  // In Electron environment, we would use IPC to call the Python bridge.
-  // For web-only demonstration, we log the payload.
+  // In Electron environment, we use IPC to call the Python bridge.
   if (window.electronAPI) {
-    // window.electronAPI.sendSMS(payload);
+    try {
+      await window.electronAPI.sendSMS(payload);
+    } catch (err) {
+      console.error("Failed to send SMS via Electron bridge:", err);
+    }
   }
 };

@@ -1,5 +1,5 @@
-const { contextBridge, ipcRenderer } = require('electron');
+import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  // Add APIs here
+  sendSMS: (data) => ipcRenderer.invoke('send-sms', data),
 });
